@@ -2,13 +2,15 @@ from django.db import models
 from django.conf import settings
 from django_utils.models import UUIDTimestampedModel
 
-PRIORITY = ('Low', 'Medium', 'High')
+PRIORITY = (('L', 'Low'),
+            ('M', 'Medium'),
+            ('H', 'High'))
 
 
 class Project(UUIDTimestampedModel):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, verbose_name='')
-    description = models.CharField(max_length=255, verbose_name='')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='User')
+    name = models.CharField(max_length=255, verbose_name='Project name')
+    description = models.CharField(max_length=255, verbose_name='Project description')
 
     class Meta:
         verbose_name = 'Project'
@@ -20,11 +22,11 @@ class Project(UUIDTimestampedModel):
 
 
 class Task(UUIDTimestampedModel):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    text = models.CharField(max_length=255, verbose_name='')
-    end_time = models.DateTimeField()
-    state = models.BooleanField()
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='User')
+    text = models.CharField(max_length=255, verbose_name='Task')
+    end_time = models.DateTimeField(verbose_name='Task end time')
+    state = models.BooleanField(default=False, verbose_name='Task state')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name='Task from project')
     priority = models.CharField(
         max_length=255,
         choices=PRIORITY,
