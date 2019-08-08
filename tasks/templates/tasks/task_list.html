@@ -1,0 +1,24 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    {% for task in task_list %}
+        <div>
+            <h3>{{ task.author }}</h3>
+            <p>{{ task.text }}</p>
+            <p>published: {{ task.created }}</p>
+            <br>
+        </div>
+    {% endfor %}
+
+
+    {% if not task_list %}
+        <p>You have done all tasks!!!</p>
+    {% endif %}
+
+    <form action="/links/create" method="post">
+        {% csrf_token %}
+        <p>URL:
+            <input type=text name=long_link value="{{ url }}" class=urlinput>
+            <input type=submit value="Shorten">
+    </form>
+{% endblock %}
