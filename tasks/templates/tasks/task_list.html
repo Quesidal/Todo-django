@@ -15,10 +15,10 @@
         <p>You have done all tasks!!!</p>
     {% endif %}
 
-    <form action="/links/create" method="post">
-        {% csrf_token %}
-        <p>URL:
-            <input type=text name=long_link value="{{ url }}" class=urlinput>
-            <input type=submit value="Shorten">
-    </form>
+    {#    <!--<form action="/links/create" method="post">#}
+    {#        {% csrf_token %}#}
+    {#        <p>URL:#}
+    {#            <input type=text name=long_link value="{{ url }}" class=urlinput>#}
+    {#            <input type=submit value="Shorten">#}
+    {#    </form>--#}
 {% endblock %}
