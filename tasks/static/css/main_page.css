@@ -111,10 +111,11 @@ body {
     justify-content: space-around;
     background-color: white;
     width: 100px;
-    min-height: 50px;
+    min-height: 30px;
     border-radius: 5px;
     border: 1px solid #e2e2e2;
 }
+
 
 .task-actions:hover .actions-container {
     opacity: 1;
@@ -219,7 +220,8 @@ body {
     display: flex;
 }
 
-.add-task-form .buttons button {
+.add-task-form .buttons a,
+.add-task-form .buttons input {
     background-color: dodgerblue;
     color: white;
     border: none;
