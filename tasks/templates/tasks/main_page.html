@@ -90,9 +90,9 @@
                     <input type="submit" class="add" value="add"/>
                     <a class="cancel">Cancel</a>
                     <select name="priority" id="">
-                        <option>LOW</option>
-                        <option>MEDIUM</option>
-                        <option>HIGH</option>
+                        <option value="L">LOW</option>
+                        <option selected value="M">MEDIUM</option>
+                        <option value="H">HIGH</option>
                     </select>
                     <select name="project" id="">
                         {% for project in projects %}
@@ -101,20 +101,6 @@
                     </select>
                 </div>
             </form>
-            {% if form.errors %}
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <div class="alert alert-danger">
-                            <strong>{{ error|escape }}</strong>
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        <strong>{{ error|escape }}</strong>
-                    </div>
-                {% endfor %}
-            {% endif %}
         </ul>
         <a class="add-btn">
             + Add task
