@@ -1,12 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.views.generic import TemplateView, ListView, CreateView
+from django.views import View
+from django.views.generic import TemplateView, ListView, CreateView, DeleteView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 
+from tasks.task_generator import run
 from .models import Task
 from .forms import TaskForm
-from .services import get_project_by_name, get_projects_for_user, get_task_for_user
+from .services import get_project_by_name, get_projects_for_user, get_task_for_user, get_task_for_uuid
 
 
 class TestView(TemplateView):
@@ -57,3 +59,18 @@ class TaskAddView(TemplateView):
         new_task.priority = form.cleaned_data['priority']
         new_task.project = get_project_by_name(form.cleaned_data['project'])
         new_task.save()
+
+
+class TaskDeleteView(View):
+    def get(self, request, *args, **kwargs):
+        old_task = get_task_for_uuid(kwargs['uuid'])
+        old_task.delete()
+        return redirect('/')
+
+
+class TaskGenView(TemplateView):
+    template_name = "tasks/main_page.html"
+
+    def get(self, request, *args, **kwargs):
+        run()
+        return redirect('/')
