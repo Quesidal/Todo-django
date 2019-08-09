@@ -4,8 +4,9 @@ from django.views.generic import TemplateView, ListView, CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 
-from tasks.forms import TaskForm
-from .models import Task, Project
+from .models import Task
+from .forms import TaskForm
+from .services import get_project_by_name, get_projects_for_user, get_task_for_user
 
 
 class TestView(TemplateView):
@@ -29,10 +30,14 @@ class TaskList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['projects'] = Project.objects.filter(author=self.request.user)
-        context['tasks'] = Task.objects.filter(author=self.request.user)
-        context['form'] = TaskForm()
+        context.update(self.get_my_date())
         return context
+
+    def get_my_date(self) -> dict:
+        my_date = {'projects': get_projects_for_user(self.request.user),
+                   'tasks': get_task_for_user(self.request.user),
+                   'form': TaskForm()}
+        return my_date
 
 
 class TaskAddView(TemplateView):
@@ -50,5 +55,5 @@ class TaskAddView(TemplateView):
         new_task.text = form.cleaned_data['text']
         new_task.end_time = form.cleaned_data['end_time']
         new_task.priority = form.cleaned_data['priority']
-        new_task.project = Project.objects.get(name=form.cleaned_data['project'])
+        new_task.project = get_project_by_name(form.cleaned_data['project'])
         new_task.save()
