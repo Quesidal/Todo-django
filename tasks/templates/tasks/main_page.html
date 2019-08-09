@@ -29,16 +29,13 @@
                 Projects
             </div>
             <ul class="projects-list">
+                {% for project in projects %}
                 <li class="project">
                     <span class="project-tag" style="background-color: burlywood"></span>
-                    <span class="project-name">Work</span>
+                    <span class="project-name">{{ project.name }}</span>
                     <span class="task-counter">2</span>
                 </li>
-                <li class="project">
-                    <span class="project-tag"></span>
-                    <span class="project-name">Work</span>
-                    <span class="task-counter">2</span>
-                </li>
+                {% endfor %}
             </ul>
             <button class="add-btn">
                 + Add
@@ -79,16 +76,15 @@
                     </span>
             </li>
             {% endfor %}
-            <form class="add-task-form" action="task/add" method="post">
+            <form class="add-task-form" id="add-task" action="task/add" method="post">
                 {% csrf_token %}
                 <div class="inputs">
                     <input name="text" type="text" class="input edit-task-name" value="ToDo test task"/>
                     <input name="end_time" class="input change-date" type="datetime-local">
                 </div>
                 <div class="buttons">
-
                     <input type="submit" class="add" value="add"/>
-                    <a class="cancel">Cancel</a>
+                    <a class="cancel" id='cancel'>Cancel</a>
                     <select name="priority" id="">
                         <option value="L">LOW</option>
                         <option selected value="M">MEDIUM</option>
@@ -102,13 +98,13 @@
                 </div>
             </form>
         </ul>
-        <a class="add-btn">
+        <a id="add-task-btn" class="add-btn">
             + Add task
         </a>
         <form class=""></form>
     </main>
     <div class="right-sidebar">12</div>
 </section>
-
+<script src="{% static 'js/main_page.js' %}"></script>
 </body>
 </html>
