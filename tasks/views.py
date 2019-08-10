@@ -43,6 +43,20 @@ class TaskListView(LoginRequiredMixin, ListView):
         return my_date
 
 
+class TaskListForProjectView(TaskListView):
+
+    def get(self, request, *args, **kwargs):
+        self.proj_uuid = kwargs['uuid']
+        return super().get(self, request, *args, **kwargs)
+
+    def get_my_date(self) -> dict:
+        project = get_project_for_uuid(self.proj_uuid)
+        my_date = {'projects': get_projects_for_user(self.request.user),
+                   'tasks': get_task_for_user(self.request.user).filter(project=project)
+                   }
+        return my_date
+
+
 class TaskAddView(View):
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)

@@ -102,7 +102,7 @@
     <li class="project">
         <span>
             <span class="project-tag" style="background-color: {{ project.color }}"></span>
-            <span class="project-name">{{ project.name }}</span>
+            <a class="project-name" href="/task/project/{{ project.str_pk }}">{{ project.name }}</a>
             <span class="task-counter"
                   id="proj-task-counter-{{ project.str_pk }}">{{ project.count_active_task }}</span>
         </span>
