@@ -3,9 +3,9 @@ from django.conf import settings
 from django_utils.models import UUIDTimestampedModel
 from projects.models import Project
 
-PRIORITY = (('0', 'Low'),
-            ('1', 'Medium'),
-            ('2', 'High'))
+PRIORITY = ((0, 'Low'),
+            (1, 'Medium'),
+            (2, 'High'))
 
 
 class Task(UUIDTimestampedModel):
