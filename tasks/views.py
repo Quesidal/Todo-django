@@ -66,7 +66,7 @@ class TaskAddView(View):
 
 
 class TaskUpdateView(TaskListView):
-    template_name = 'tasks/update_task.html'
+    template_name = 'tasks/main_page.html'
 
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)
@@ -101,7 +101,7 @@ class TaskDeleteView(View):
 
 
 class TaskGenView(TemplateView):
-    template_name = "tasks/main_page.html"
+    template_name = "tasks/base_main_page.html"
 
     def get(self, request, *args, **kwargs):
         run()

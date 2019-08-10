@@ -79,7 +79,7 @@ body {
     margin-right: 15px;
 }
 
-/* Icon configuration start */
+/* Icon configuration task start */
 .task-actions {
     display: flex;
     flex-direction: column;
@@ -115,6 +115,58 @@ body {
 }
 
 .task:hover .task-actions {
+    opacity: 1;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+}
+
+.action-btn:hover {
+    background-color: dodgerblue;
+    color: white;
+}
+
+/* Icon configuration end */
+
+/* Icon configuration project start */
+.project-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    cursor: pointer;
+    opacity: 0;
+    position: relative;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.project-actions .circle {
+    width: 7px;
+    height: 7px;
+    background-color: darkgreen;
+    border-radius: 50%;
+    margin: 1px 0;
+}
+
+.project-actions .actions-container {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: white;
+    width: 100px;
+    min-height: 50px;
+    border-radius: 5px;
+    border: 1px solid #e2e2e2;
+}
+
+.project-actions:hover .actions-container {
+    display: flex;
+}
+
+.project:hover .project-actions {
     opacity: 1;
 }
 
@@ -186,6 +238,8 @@ body {
     padding: 5px;
 }
 
+/*add task form start*/
+
 #add-task {
     display: none;
 }
@@ -239,6 +293,74 @@ body {
 .add-task-form .change-date {
     flex-basis: 30%;
 }
+
+/*add task form end*/
+/*add proj form start*/
+
+#add-proj {
+    display: none;
+}
+
+.add-proj-form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.add-proj-form .inputs {
+    display: flex;
+    align-items: center;
+}
+
+.add-proj-form .input {
+    height: 30px;
+    padding: 0 5px;
+    border: 1px solid grey;
+}
+
+.add-proj-form .color-proj {
+    height: 20px;
+    width: 20px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+}
+
+.add-proj-form .edit-proj-name {
+    flex-basis: 70%;
+}
+
+.add-proj-form .buttons {
+    display: flex;
+}
+
+.add-proj-form .buttons input,
+.add-proj-form .buttons a {
+    background-color: dodgerblue;
+    color: white;
+    border: none;
+    width: 80px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-proj-form .cancel {
+    background: transparent;
+    color: black;
+}
+
+.add-proj-form .change-date {
+    flex-basis: 30%;
+}
+
+/*add proj form end*/
 
 .task > span {
     display: flex;

@@ -1,0 +1,78 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/main_page.css' %}">
+</head>
+<body>
+<header class="main-header">
+    <div class="logo">TODO</div>
+    <div class="active-user">{{ user }}</div>
+    {% if not user.is_authenticated %}
+        <a href="{% url 'login' %}">Log In</a>
+    {% else %}
+        <a href="{% url 'logout' %}">Log Out</a>
+    {% endif %}
+    <div class="archive-icon">0</div>
+</header>
+<section class="section">
+    <div class="sidebar">
+        <div class="period">
+            <div class="period-item">Today <span>5</span></div>
+            <div class="period-item">Next 7 days</div>
+        </div>
+        <div class="projects-block">
+            <div class="projects-title">
+                Projects
+            </div>
+            <ul class="projects-list">
+                {% for project in projects %}
+                    {% if project.pk == selected_project %}
+                        {% block editing_project %}
+                        {% endblock %}
+                    {% else %}
+                        {% block display_project %}
+                        {% endblock %}
+                    {% endif %}
+                {% endfor %}
+                {% block add_project %}
+                {% endblock %}
+            </ul>
+            <form action=""></form>
+            <button id="add-proj-btn" class="add-btn">
+                + Add
+            </button>
+        </div>
+    </div>
+    <main class="main-content">
+        <div class="date-container">
+            <span class="day">Today</span>
+            <span class="date">Tu 14 march</span>
+        </div>
+
+        <ul class="task-list">
+            {% for task in tasks %}
+                {% if task.pk == selected_task %}
+                    {% block editing_task %}
+                    {% endblock %}
+                {% else %}
+                    {% block display_task %}
+                    {% endblock %}
+                {% endif %}
+            {% endfor %}
+            {% block add_task %}
+            {% endblock %}
+        </ul>
+        <a id="add-task-btn" class="add-btn">
+            + Add task
+        </a>
+        <form class=""></form>
+    </main>
+    <div class="right-sidebar">12</div>
+</section>
+<script src="{% static 'js/main_page.js' %}"></script>
+</body>
+</html>
