@@ -3,9 +3,9 @@
 {% block display_task %}
     <li class="task">
         <span>
-            {% if task.priority == 'L' %}
+            {% if task.priority == 0 %}
                 <span class="priority" style="background-color: white"></span>
-            {% elif task.priority == 'M' %}
+            {% elif task.priority == 1 %}
                 <span class="priority" style="background-color: orange"></span>
             {% else %}
                 <span class="priority" style="background-color: red"></span>
