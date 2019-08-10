@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views import View
-from django.views.generic import TemplateView, ListView, CreateView, DeleteView
+from django.views.generic import TemplateView, ListView, CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 
@@ -25,7 +25,7 @@ class LoginView(TemplateView):
     template_name = "registration/login.html"
 
 
-class TaskList(LoginRequiredMixin, ListView):
+class TaskListView(LoginRequiredMixin, ListView):
     login_url = 'accounts/login/'
     model = Task
     template_name = "tasks/main_page.html"
@@ -37,21 +37,25 @@ class TaskList(LoginRequiredMixin, ListView):
 
     def get_my_date(self) -> dict:
         my_date = {'projects': get_projects_for_user(self.request.user),
-                   'tasks': get_task_for_user(self.request.user),
+                   'tasks': self.change_uuid_for_str(get_task_for_user(self.request.user)),
                    'form': TaskForm()}
         return my_date
 
+    @staticmethod
+    def change_uuid_for_str(task_list):
+        for task in task_list:
+            task.pk = str(task.pk)
+        return task_list
 
-class TaskAddView(TemplateView):
-    template_name = "tasks/main_page.html"
 
+class TaskAddView(View):
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)
         if form.is_valid():
-            self.__save_task_from_form(form)
+            self._save_task_from_form(form)
         return redirect('/')
 
-    def __save_task_from_form(self, form):
+    def _save_task_from_form(self, form):
         new_task = Task()
         new_task.author = self.request.user
         new_task.text = form.cleaned_data['text']
@@ -59,6 +63,34 @@ class TaskAddView(TemplateView):
         new_task.priority = form.cleaned_data['priority']
         new_task.project = get_project_by_name(form.cleaned_data['project'])
         new_task.save()
+
+
+class TaskUpdateView(TaskListView):
+    template_name = 'tasks/update_task.html'
+
+    def post(self, request, *args, **kwargs):
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            self._update_task_from_form(form, kwargs['uuid'])
+        return redirect('/')
+
+    def get(self, request, *args, **kwargs):
+        self.uuid = kwargs['uuid']
+        return super().get(self, request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['selected_task'] = self.uuid
+        return context
+
+    @staticmethod
+    def _update_task_from_form(form, task_uuid):
+        update_task = get_task_for_uuid(task_uuid)
+        update_task.text = form.cleaned_data['text']
+        update_task.end_time = form.cleaned_data['end_time']
+        update_task.priority = form.cleaned_data['priority']
+        update_task.project = get_project_by_name(form.cleaned_data['project'])
+        update_task.save()
 
 
 class TaskDeleteView(View):
