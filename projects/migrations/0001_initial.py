@@ -8,37 +8,30 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('projects', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Task',
+            name='Project',
             fields=[
                 ('created',
                  django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
                 ('modified',
                  django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('text', models.CharField(max_length=255, verbose_name='Task')),
-                ('end_time', models.DateTimeField(verbose_name='Task end time')),
-                ('state', models.BooleanField(default=False, verbose_name='Task state')),
-                ('priority', models.CharField(choices=[('L', 'Low'), ('M', 'Medium'), ('H', 'High')], default='Medium',
-                                              max_length=255)),
+                ('name', models.CharField(max_length=255, verbose_name='Project name')),
+                ('description', models.CharField(max_length=255, verbose_name='Project description')),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL,
                                              verbose_name='User')),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.Project',
-                                              verbose_name='Task from project')),
             ],
             options={
-                'verbose_name': 'Task',
-                'verbose_name_plural': 'Tasks',
-                'db_table': 'tasks',
+                'verbose_name': 'Project',
+                'verbose_name_plural': 'Projects',
+                'db_table': 'projects',
             },
         ),
     ]
