@@ -3,7 +3,7 @@ import string
 from datetime import datetime, timedelta
 
 from django.contrib.auth.models import User
-from tasks.models import Task, PRIORITY, Project
+from .models import Task, PRIORITY, Project
 
 COUNT_TASK = 10
 

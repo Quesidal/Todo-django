@@ -28,3 +28,7 @@ class Task(UUIDTimestampedModel):
 
     def __str__(self):
         return f'{self.text}'
+
+    @property
+    def str_pk(self):
+        return str(self.pk)

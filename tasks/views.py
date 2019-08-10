@@ -5,10 +5,11 @@ from django.views.generic import TemplateView, ListView, CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 
+from projects.services import get_projects_for_user, get_project_for_uuid
 from tasks.task_generator import run
 from .models import Task
 from .forms import TaskForm
-from .services import get_project_by_name, get_projects_for_user, get_task_for_user, get_task_for_uuid
+from .services import get_task_for_user, get_task_for_uuid
 
 
 class TestView(TemplateView):
@@ -37,15 +38,9 @@ class TaskListView(LoginRequiredMixin, ListView):
 
     def get_my_date(self) -> dict:
         my_date = {'projects': get_projects_for_user(self.request.user),
-                   'tasks': self.change_uuid_for_str(get_task_for_user(self.request.user)),
+                   'tasks': get_task_for_user(self.request.user),
                    'form': TaskForm()}
         return my_date
-
-    @staticmethod
-    def change_uuid_for_str(task_list):
-        for task in task_list:
-            task.pk = str(task.pk)
-        return task_list
 
 
 class TaskAddView(View):
@@ -61,7 +56,7 @@ class TaskAddView(View):
         new_task.text = form.cleaned_data['text']
         new_task.end_time = form.cleaned_data['end_time']
         new_task.priority = form.cleaned_data['priority']
-        new_task.project = get_project_by_name(form.cleaned_data['project'])
+        new_task.project = get_project_for_uuid(form.cleaned_data['project'])
         new_task.save()
 
 
@@ -89,7 +84,7 @@ class TaskUpdateView(TaskListView):
         update_task.text = form.cleaned_data['text']
         update_task.end_time = form.cleaned_data['end_time']
         update_task.priority = form.cleaned_data['priority']
-        update_task.project = get_project_by_name(form.cleaned_data['project'])
+        update_task.project = get_project_for_uuid(form.cleaned_data['project'])
         update_task.save()
 
 
