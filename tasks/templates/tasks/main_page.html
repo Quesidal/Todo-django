@@ -6,7 +6,7 @@
             {% if task.priority == 'L' %}
                 <span class="priority" style="background-color: white"></span>
             {% elif task.priority == 'M' %}
-                <span class="priority" style="background-color: yellow"></span>
+                <span class="priority" style="background-color: orange"></span>
             {% else %}
                 <span class="priority" style="background-color: red"></span>
             {% endif %}
@@ -113,7 +113,6 @@
                 <span class="circle"></span>
                 <span class="actions-container">
                     <a class="action-btn" href="/project/update/{{ project.str_pk }}">Edit</a>
-{#                    <a class="action-btn delete-proj" href="/project/delete/{{ project.str_pk }}">Delete</a>#}
                     <a class="action-btn delete-proj" id="proj-del-btn-{{ project.str_pk }}">Delete</a>
                 </span>
             </span>
@@ -140,7 +139,7 @@
         {% csrf_token %}
         <div class="inputs">
             <input name="color" class="input color-proj" type="color" value="{{ project.color }}">
-            <input name="name" type="text" class="input edit-proj-name" value="Project name"/>
+            <input name="name" type="text" class="input edit-proj-name" value="{{ project.name }}"/>
         </div>
         <div class="buttons">
             <input type="submit" class="add" value="add"/>
