@@ -38,8 +38,8 @@ class TaskListView(LoginRequiredMixin, ListView):
 
     def get_my_date(self) -> dict:
         my_date = {'projects': get_projects_for_user(self.request.user),
-                   'tasks': get_task_for_user(self.request.user),
-                   'form': TaskForm()}
+                   'tasks': get_task_for_user(self.request.user).order_by('-priority')
+                   }
         return my_date
 
 

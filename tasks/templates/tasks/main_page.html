@@ -3,9 +3,9 @@
 {% block display_task %}
     <li class="task">
         <span>
-            {% if task.priority == 0 %}
+            {% if task.priority == '0' %}
                 <span class="priority" style="background-color: white"></span>
-            {% elif task.priority == 1 %}
+            {% elif task.priority == '1' %}
                 <span class="priority" style="background-color: orange"></span>
             {% else %}
                 <span class="priority" style="background-color: red"></span>
@@ -47,18 +47,18 @@
             <a class="cancel" id='cancel edit' href="/">Cancel</a>
             <select name="priority" id="">
                 {#Todo: fix this bad code#}
-                {% if task.priority == 'L' %}
-                    <option selected value="L">LOW</option>
-                    <option value="M">MEDIUM</option>
-                    <option value="H">HIGH</option>
-                {% elif task.priority == 'M' %}
-                    <option value="L">LOW</option>
-                    <option selected value="M">MEDIUM</option>
-                    <option value="H">HIGH</option>
+                {% if task.priority == '0' %}
+                    <option selected value="0">LOW</option>
+                    <option value="1">MEDIUM</option>
+                    <option value="2">HIGH</option>
+                {% elif task.priority == '1' %}
+                    <option value="0">LOW</option>
+                    <option selected value="1">MEDIUM</option>
+                    <option value="2">HIGH</option>
                 {% else %}
-                    <option value="L">LOW</option>
-                    <option value="M">MEDIUM</option>
-                    <option selected value="H">HIGH</option>
+                    <option value="0">LOW</option>
+                    <option value="1">MEDIUM</option>
+                    <option selected value="2">HIGH</option>
                 {% endif %}
             </select>
             <select name="project" id="">
@@ -85,9 +85,9 @@
             <input type="submit" class="add" value="add"/>
             <a class="cancel" id='cancel-task-btn'>Cancel</a>
             <select name="priority" id="">
-                <option value="L">LOW</option>
-                <option selected value="M">MEDIUM</option>
-                <option value="H">HIGH</option>
+                <option value="0">LOW</option>
+                <option selected value="1">MEDIUM</option>
+                <option value="2">HIGH</option>
             </select>
             <select name="project" id="">
                 {% for project in projects %}
