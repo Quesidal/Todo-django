@@ -30,8 +30,8 @@
             </div>
             <ul class="projects-list">
                 {% for project in projects %}
-                    {% if project.pk == selected_project %}
-                        {% block editing_project %}
+                    {% if project.str_pk == selected_project %}
+                        {% block edit_project %}
                         {% endblock %}
                     {% else %}
                         {% block display_project %}
@@ -55,7 +55,7 @@
 
         <ul class="task-list">
             {% for task in tasks %}
-                {% if task.pk == selected_task %}
+                {% if task.str_pk == selected_task %}
                     {% block editing_task %}
                     {% endblock %}
                 {% else %}

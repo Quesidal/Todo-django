@@ -1,30 +1,5 @@
 {% extends 'tasks/base_main_page.html' %}
 
-{% block editing_task %}
-    <form class="add-task-form" id="add-task" action="/task/update/{{ selected_task }}" method="post"
-          style="display:flex;">
-        {% csrf_token %}
-        <div class="inputs">
-            <input name="text" type="text" class="input edit-task-name" value="{{ task.text }}"/>
-            <input name="end_time" class="input change-date" type="datetime-local">
-        </div>
-        <div class="buttons">
-            <input type="submit" class="add" value="add"/>
-            <a class="cancel" id='cancel edit' href="/">Cancel</a>
-            <select name="priority" id="">
-                <option value="L">LOW</option>
-                <option selected value="M">MEDIUM</option>
-                <option value="H">HIGH</option>
-            </select>
-            <select name="project" id="">
-                {% for project in projects %}
-                    <option>{{ project }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </form>
-{% endblock %}
-
 {% block display_task %}
     <li class="task">
         <span>
@@ -39,18 +14,59 @@
         </span>
         <span>
             <span class="project">{{ task.project }}</span>
-            <span class="project-tag"></span>
+            <span class="project-tag" style="background-color: {{ task.project.color }}"></span>
             <span class="task-actions">
                 <span class="circle"></span>
                 <span class="circle"></span>
                 <span class="circle"></span>
                 <span class="actions-container">
-                    <a class="action-btn" href="/task/update/{{ task.pk }}">Edit</a>
-                    <a class="action-btn" href="/task/delete/{{ task.pk }}">Delete</a>
+                    <a class="action-btn" href="/task/update/{{ task.str_pk }}">Edit</a>
+                    <a class="action-btn" href="/task/delete/{{ task.str_pk }}">Delete</a>
                 </span>
             </span>
         </span>
     </li>
+{% endblock %}
+
+{% block editing_task %}
+    <form class="add-task-form" action="/task/update/{{ selected_task }}" method="post"
+          style="display:flex;">
+        {% csrf_token %}
+        <div class="inputs">
+            <input name="text" type="text" class="input edit-task-name" value="{{ task.text }}"/>
+            <input name="end_time" class="input change-date" type="datetime-local"
+                   value="{{ task.end_time|date:'Y-m-d\Th:m:s' }}" id="end-time"/>
+        </div>
+        <div class="buttons">
+            <input type="submit" class="add" value="add"/>
+            <a class="cancel" id='cancel edit' href="/">Cancel</a>
+            <select name="priority" id="">
+                {#Todo: fix this bad code#}
+                {% if task.priority == 'L' %}
+                    <option selected value="L">LOW</option>
+                    <option value="M">MEDIUM</option>
+                    <option value="H">HIGH</option>
+                {% elif task.priority == 'M' %}
+                    <option value="L">LOW</option>
+                    <option selected value="M">MEDIUM</option>
+                    <option value="H">HIGH</option>
+                {% else %}
+                    <option value="L">LOW</option>
+                    <option value="M">MEDIUM</option>
+                    <option selected value="H">HIGH</option>
+                {% endif %}
+            </select>
+            <select name="project" id="">
+                {% for project in projects %}
+                    {% if task.project.str_pk == project.str_pk %}
+                        <option selected value="{{ project.str_pk }}">{{ project }}</option>
+                    {% else %}
+                        <option value="{{ project.str_pk }}">{{ project }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </form>
 {% endblock %}
 
 {% block add_task %}
@@ -70,7 +86,7 @@
             </select>
             <select name="project" id="">
                 {% for project in projects %}
-                    <option>{{ project }}</option>
+                    <option value="{{ project.str_pk }}">{{ project }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -80,9 +96,9 @@
 {% block display_project %}
     <li class="project">
         <span>
-            <span class="project-tag" style="background-color: burlywood"></span>
+            <span class="project-tag" style="background-color: {{ project.color }}"></span>
             <span class="project-name">{{ project.name }}</span>
-            <span class="task-counter">2</span>
+            <span class="task-counter">{{ project.count_active_task }}</span>
         </span>
         <span>
             <span class="project-actions">
@@ -90,37 +106,12 @@
                 <span class="circle"></span>
                 <span class="circle"></span>
                 <span class="actions-container">
-                    <a class="action-btn" href="/project/update/{{ project.pk }}">Edit</a>
-                    <a class="action-btn" href="/project/delete/{{ project.pk }}">Delete</a>
+                    <a class="action-btn" href="/project/update/{{ project.str_pk }}">Edit</a>
+                    <a class="action-btn" href="/project/delete/{{ project.str_pk }}">Delete</a>
                 </span>
             </span>
         </span>
     </li>
-{% endblock %}
-
-{% block editing_project %}
-    {#    <form class="add-task-form" id="add-task" action="/task/update/{{ selected_task }}" method="post"#}
-    {#          style="display:flex;">#}
-    {#        {% csrf_token %}#}
-    {#        <div class="inputs">#}
-    {#            <input name="text" type="text" class="input edit-task-name" value="{{ task.text }}"/>#}
-    {#            <input name="end_time" class="input change-date" type="datetime-local">#}
-    {#        </div>#}
-    {#        <div class="buttons">#}
-    {#            <input type="submit" class="add" value="add"/>#}
-    {#            <a class="cancel" id='cancel edit' href="/">Cancel</a>#}
-    {#            <select name="priority" id="">#}
-    {#                <option value="L">LOW</option>#}
-    {#                <option selected value="M">MEDIUM</option>#}
-    {#                <option value="H">HIGH</option>#}
-    {#            </select>#}
-    {#            <select name="project" id="">#}
-    {#                {% for project in projects %}#}
-    {#                    <option>{{ project }}</option>#}
-    {#                {% endfor %}#}
-    {#            </select>#}
-    {#        </div>#}
-    {#    </form>#}
 {% endblock %}
 
 {% block add_project %}
@@ -128,11 +119,25 @@
         {% csrf_token %}
         <div class="inputs">
             <input name="color" class="input color-proj" type="color">
-            <input name="text" type="text" class="input edit-proj-name" value="Project name"/>
+            <input name="name" type="text" class="input edit-proj-name" value="Project name"/>
         </div>
         <div class="buttons">
             <input type="submit" class="add" value="add"/>
             <a class="cancel" id='cancel-proj-btn'>Cancel</a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block edit_project %}
+    <form class="add-proj-form" action="/project/update/{{ selected_project }}" method="post">
+        {% csrf_token %}
+        <div class="inputs">
+            <input name="color" class="input color-proj" type="color" value="{{ project.color }}">
+            <input name="name" type="text" class="input edit-proj-name" value="Project name"/>
+        </div>
+        <div class="buttons">
+            <input type="submit" class="add" value="add"/>
+            <a class="cancel" href="/">Cancel</a>
         </div>
     </form>
 {% endblock %}
