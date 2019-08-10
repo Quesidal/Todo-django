@@ -1,9 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views import View
-from django.views.generic import TemplateView, ListView, CreateView
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
+from django.views.generic import TemplateView, ListView
 
 from projects.services import get_projects_for_user, get_project_for_uuid
 from tasks.task_generator import run
@@ -12,18 +10,6 @@ from .forms import TaskForm
 from .services import get_task_for_user, get_task_for_uuid
 
 
-class TestView(TemplateView):
-    template_name = 'tasks/main_page.html'
-
-
-class SignInView(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'registration/signin.html'
-
-
-class LoginView(TemplateView):
-    template_name = "registration/login.html"
 
 
 class TaskListView(LoginRequiredMixin, ListView):
@@ -109,17 +95,17 @@ class TaskDeleteView(View):
         return redirect('/')
 
 
-class TaskGenView(TemplateView):
-    template_name = "tasks/base_main_page.html"
-
-    def get(self, request, *args, **kwargs):
-        run()
-        return redirect('/')
-
-
 class TaskDoneView(View):
     def get(self, request, *args, **kwargs):
         done_task = get_task_for_uuid(kwargs['uuid'])
         done_task.state = True
         done_task.save()
+        return redirect('/')
+
+
+class TaskGenView(TemplateView):
+    template_name = "tasks/base_main_page.html"
+
+    def get(self, request, *args, **kwargs):
+        run()
         return redirect('/')

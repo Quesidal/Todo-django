@@ -1,11 +1,9 @@
 from django.urls import path, include, re_path
-from .views import TaskListView, SignInView, TaskAddView, TaskGenView, TaskDeleteView, TaskUpdateView, TaskDoneView, \
+from .views import TaskListView, TaskAddView, TaskGenView, TaskDeleteView, TaskUpdateView, TaskDoneView, \
     TaskListForProjectView
 
 urlpatterns = [
     path('', TaskListView.as_view(), name='main page'),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/signin', SignInView.as_view(), name='sign in'),
 
     path('task/generate', TaskGenView.as_view(), name='task gen'),
 
