@@ -24,8 +24,9 @@ class ProjectAddView(View):
 
 class ProjectDeleteView(View):
     def get(self, request, *args, **kwargs):
-        old_task = get_project_for_uuid(kwargs['uuid'])
-        old_task.delete()
+        old_proj = get_project_for_uuid(kwargs['uuid'])
+        if old_proj.count_active_task == 0:
+            old_proj.delete()
         return redirect('/')
 
 
@@ -53,3 +54,4 @@ class ProjectUpdateView(TaskListView):
         update_proj.name = form.cleaned_data['name']
         update_proj.color = form.cleaned_data['color']
         update_proj.save()
+

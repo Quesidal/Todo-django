@@ -103,7 +103,8 @@
         <span>
             <span class="project-tag" style="background-color: {{ project.color }}"></span>
             <span class="project-name">{{ project.name }}</span>
-            <span class="task-counter">{{ project.count_active_task }}</span>
+            <span class="task-counter"
+                  id="proj-task-counter-{{ project.str_pk }}">{{ project.count_active_task }}</span>
         </span>
         <span>
             <span class="project-actions">
@@ -112,7 +113,8 @@
                 <span class="circle"></span>
                 <span class="actions-container">
                     <a class="action-btn" href="/project/update/{{ project.str_pk }}">Edit</a>
-                    <a class="action-btn" href="/project/delete/{{ project.str_pk }}">Delete</a>
+{#                    <a class="action-btn delete-proj" href="/project/delete/{{ project.str_pk }}">Delete</a>#}
+                    <a class="action-btn delete-proj" id="proj-del-btn-{{ project.str_pk }}">Delete</a>
                 </span>
             </span>
         </span>

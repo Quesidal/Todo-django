@@ -1,4 +1,3 @@
-const isAddFormActive = false;
 const addTaskBtn = document.getElementById('add-task-btn');
 let cancelTaskBtn = document.getElementById('cancel-task-btn');
 const addTaskForm = document.getElementById('add-task');
@@ -14,6 +13,8 @@ const hideAddTaskForm = () => {
 addTaskBtn.addEventListener('click', showAddTaskForm);
 cancelTaskBtn.addEventListener('click', hideAddTaskForm);
 
+
+/* for proj form*/
 const addProjBtn = document.getElementById('add-proj-btn');
 let cancelProjBtn = document.getElementById('cancel-proj-btn');
 const addProjForm = document.getElementById('add-proj');
@@ -28,3 +29,23 @@ const hideAddProjForm = () => {
 
 addProjBtn.addEventListener('click', showAddProjForm);
 cancelProjBtn.addEventListener('click', hideAddProjForm);
+
+/*for del btn*/
+let deleteProjBtn = document.getElementsByClassName('delete-proj');
+
+for (let i = 0; i < deleteProjBtn.length; i++) {
+    deleteProjBtn[i].addEventListener("click", function (event) {
+        let proj_uuid = this.id.slice(13);
+        let elem_id = "proj-task-counter-" + this.id.slice(13);
+        let count_task = document.getElementById(elem_id).innerHTML;
+        if (count_task > 0) {
+            Swal.fire({
+                type: 'warning',
+                title: 'Oops...',
+                text: 'You have ' + count_task + ' unresolved tasks!',
+            })
+        } else {
+            window.location.href = '/project/delete/' + proj_uuid;
+        }
+    });
+}
