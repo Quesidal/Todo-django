@@ -10,7 +10,11 @@
             {% else %}
                 <span class="priority" style="background-color: red"></span>
             {% endif %}
-            <span class="task-name">{{ task.text }}</span>
+            {% if task.state == True %}
+                <strike><span class="task-name">{{ task.text }}</span></strike>
+            {% else %}
+                <span class="task-name">{{ task.text }}</span>
+            {% endif %}
         </span>
         <span>
             <span class="project">{{ task.project }}</span>
@@ -20,6 +24,7 @@
                 <span class="circle"></span>
                 <span class="circle"></span>
                 <span class="actions-container">
+                    <a class="action-btn" href="/task/done/{{ task.str_pk }}">Done</a>
                     <a class="action-btn" href="/task/update/{{ task.str_pk }}">Edit</a>
                     <a class="action-btn" href="/task/delete/{{ task.str_pk }}">Delete</a>
                 </span>

@@ -101,3 +101,11 @@ class TaskGenView(TemplateView):
     def get(self, request, *args, **kwargs):
         run()
         return redirect('/')
+
+
+class TaskDoneView(View):
+    def get(self, request, *args, **kwargs):
+        done_task = get_task_for_uuid(kwargs['uuid'])
+        done_task.state = True
+        done_task.save()
+        return redirect('/')
