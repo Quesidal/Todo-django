@@ -19,7 +19,7 @@ class TaskQuerySet(models.QuerySet):
         return self.filter(end_time__date=datetime.date.today())
 
     def old_unfinished_task(self):
-        return self.filter(end_time__lt=datetime.date.today())
+        return self.filter(end_time__lt=datetime.date.today()).filter(state=False).filter(priority__lt=2)
 
 
 class Task(UUIDTimestampedModel):

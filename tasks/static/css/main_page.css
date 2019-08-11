@@ -5,6 +5,11 @@ body {
     font-family: Roboto, sans-serif;
 }
 
+a {
+    text-decoration: none;
+    color: black;
+}
+
 .main-header {
     display: flex;
     justify-content: space-between;
@@ -63,11 +68,24 @@ body {
     align-items: center;
 }
 
+.project-name {
+    text-decoration: none;
+    color: black;
+}
+
+
 .project {
     padding: 5px 15px;
     display: flex;
     justify-content: space-around;
+    align-items: stretch;
+}
+
+.project > span {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    flex-grow: 1;
 }
 
 .project-tag {

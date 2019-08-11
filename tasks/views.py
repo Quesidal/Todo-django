@@ -37,7 +37,7 @@ class TaskListForProjectView(TaskListView):
 
     def get_my_date(self) -> dict:
         project = get_project_for_uuid(self.proj_uuid)
-        my_date = {'selected_proj': self.proj_uuid,
+        my_date = {'selected_project': self.proj_uuid,
                    'projects': get_projects_for_user(self.request.user),
                    'tasks': get_task_for_user(self.request.user).filter(project=project).filter(state=False),
                    'today_task_count': get_today_task_for_user(self.request.user).count(),
@@ -76,7 +76,7 @@ class TaskAddView(View):
         form = TaskForm(request.POST)
         if form.is_valid():
             self._save_task_from_form(form)
-        return redirect('/')
+        return redirect(request.META.get('HTTP_REFERER'))
 
     def _save_task_from_form(self, form):
         new_task = Task()
@@ -120,7 +120,7 @@ class TaskDeleteView(View):
     def get(self, request, *args, **kwargs):
         old_task = get_task_for_uuid(kwargs['uuid'])
         old_task.delete()
-        return redirect('/')
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 class TaskDoneView(View):
@@ -128,7 +128,7 @@ class TaskDoneView(View):
         done_task = get_task_for_uuid(kwargs['uuid'])
         done_task.state = True
         done_task.save()
-        return redirect('/')
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 class TaskGenView(TemplateView):
@@ -144,6 +144,5 @@ from django.dispatch import receiver
 
 
 @receiver(request_finished)
-def my_callback(sender, **kwargs):
-    print(update_old_unfinished_tasks() + 'tasks was updated')
-    print("Request finished!")
+def task_updater(sender, **kwargs):
+    update_old_unfinished_tasks()

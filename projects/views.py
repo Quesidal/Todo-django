@@ -27,7 +27,7 @@ class ProjectDeleteView(View):
         old_proj = get_project_for_uuid(kwargs['uuid'])
         if old_proj.count_active_task == 0:
             old_proj.delete()
-        return redirect('/')
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 class ProjectUpdateView(TaskListView):
@@ -46,6 +46,7 @@ class ProjectUpdateView(TaskListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['selected_project'] = self.uuid
+        context['edit_project'] = True
         return context
 
     @staticmethod
