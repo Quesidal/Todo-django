@@ -1,9 +1,9 @@
 from django.urls import path, include, re_path
 from .views import TaskListView, TaskAddView, TaskGenView, TaskDeleteView, TaskUpdateView, TaskDoneView, \
-    TaskListForProjectView
+    TaskListForProjectView, TaskListTodayView, TaskListWeekView, TaskArchiveView
 
 urlpatterns = [
-    path('', TaskListView.as_view(), name='main page'),
+    path('', TaskListTodayView.as_view(), name='main page'),
 
     path('task/generate', TaskGenView.as_view(), name='task gen'),
 
@@ -13,4 +13,8 @@ urlpatterns = [
     re_path(r'^task/delete/(?P<uuid>[\S]{36})$', TaskDeleteView.as_view(), name='task delete'),
 
     re_path(r'^task/project/(?P<uuid>[\S]{36})$', TaskListForProjectView.as_view(), name='task delete'),
+
+    path('task/week', TaskListWeekView.as_view(), name='task for week'),
+    path('task/archive', TaskArchiveView.as_view(), name='task archive'),
+
 ]

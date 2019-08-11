@@ -11,9 +11,9 @@
                 <span class="priority" style="background-color: red"></span>
             {% endif %}
             {% if task.state == True %}
-                <strike><span class="task-name">{{ task.text }}</span></strike>
+                <strike><span class="task-name">{{ task.text }} ------------- {{ task.end_time }}</span></strike>
             {% else %}
-                <span class="task-name">{{ task.text }}</span>
+                <span class="task-name">{{ task.text }} ------------- {{ task.end_time }}</span>
             {% endif %}
         </span>
         <span>

@@ -11,20 +11,20 @@
 </head>
 <body>
 <header class="main-header">
-    <div class="logo">TODO</div>
+    <div class="logo"><a href="/">TODO</a></div>
     <div class="active-user">{{ user }}</div>
     {% if not user.is_authenticated %}
         <a href="{% url 'login' %}">Log In</a>
     {% else %}
         <a href="{% url 'logout' %}">Log Out</a>
     {% endif %}
-    <div class="archive-icon">0</div>
+    <div class="archive-icon"><a href="/task/archive">archive</a></div>
 </header>
 <section class="section">
     <div class="sidebar">
         <div class="period">
-            <div class="period-item">Today <span>5</span></div>
-            <div class="period-item">Next 7 days</div>
+            <div class="period-item"><a href="/">Today</a><span>{{ today_task_count }}</span></div>
+            <div class="period-item"><a href="/task/week">Next 7 days</a><span>{{ week_task_count }}</span></div>
         </div>
         <div class="projects-block">
             <div class="projects-title">
