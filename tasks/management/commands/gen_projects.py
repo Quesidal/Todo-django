@@ -12,6 +12,9 @@ class Command(BaseCommand):
     help = 'Generate 10 random projects'
 
     def handle(self, *args, **kwargs):
+        if User.objects.count() == 0:
+            print('Please, add users first')
+            return
         print('---------start project generation---------')
         for i in range(10):
             new_project = Project()
