@@ -3,6 +3,6 @@ from .views import ProjectAddView, ProjectDeleteView, ProjectUpdateView
 
 urlpatterns = [
     path('project/add', ProjectAddView.as_view(), name='project add'),
-    re_path(r'^project/update/(?P<uuid>[\S]{36})$', ProjectUpdateView.as_view(), name='project edit'),
-    re_path(r'^project/delete/(?P<uuid>[\S]{36})$', ProjectDeleteView.as_view(), name='project delete'),
+    re_path(r'^project/update/(?P<proj_uuid>[\S]{36})$', ProjectUpdateView.as_view(), name='project edit'),
+    re_path(r'^project/delete/(?P<proj_uuid>[\S]{36})$', ProjectDeleteView.as_view(), name='project delete'),
 ]

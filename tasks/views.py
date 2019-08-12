@@ -17,56 +17,58 @@ class TaskListView(LoginRequiredMixin, ListView):
     model = Task
     template_name = "tasks/main_page.html"
 
+    def get(self, request, *args, **kwargs):
+        self.proj_uuid = kwargs.get('proj_uuid')  # request.session.get('selected_project') or
+        self.task_uuid = kwargs.get('task_uuid') or request.session.get('task_uuid')
+        self.edit_proj = request.session.get('edit_project')
+        self.drop_my_date_from_session(request)
+        return super().get(self, request, *args, **kwargs)
+
+    @staticmethod
+    def drop_my_date_from_session(request):
+        request.session['task_uuid'] = None
+        request.session['edit_project'] = None
+        request.session['selected_project'] = None
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        base_date = {'projects': get_projects_for_user(self.request.user),
+                     'today_task_count': get_today_task_for_user(self.request.user).count(),
+                     'week_task_count': get_week_task_for_user(self.request.user).count(),
+                     'selected_task': self.task_uuid,
+                     'selected_project': self.proj_uuid,
+                     'edit_project': self.edit_proj}
+        context.update(base_date)
         context.update(self.get_my_date())
         return context
 
     def get_my_date(self) -> dict:
-        my_date = {'projects': get_projects_for_user(self.request.user),
-                   'tasks': get_task_for_user(self.request.user).order_by('-priority'),
-                   'today_task_count': get_today_task_for_user(self.request.user).count(),
-                   'week_task_count': get_week_task_for_user(self.request.user).count()}
+        my_date = {'tasks': get_task_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
 class TaskListForProjectView(TaskListView):
-    def get(self, request, *args, **kwargs):
-        self.proj_uuid = kwargs['uuid']
-        return super().get(self, request, *args, **kwargs)
-
     def get_my_date(self) -> dict:
         project = get_project_for_uuid(self.proj_uuid)
-        my_date = {'selected_project': self.proj_uuid,
-                   'projects': get_projects_for_user(self.request.user),
-                   'tasks': get_task_for_user(self.request.user).filter(project=project).filter(state=False),
-                   'today_task_count': get_today_task_for_user(self.request.user).count(),
-                   'week_task_count': get_week_task_for_user(self.request.user).count()}
+        my_date = {'tasks': get_task_for_user(self.request.user).filter(project=project).active()}
         return my_date
 
 
 class TaskListTodayView(TaskListView):
     def get_my_date(self) -> dict:
-        my_date = {'projects': get_projects_for_user(self.request.user),
-                   'tasks': get_today_task_for_user(self.request.user),
-                   'today_task_count': get_today_task_for_user(self.request.user).count(),
-                   'week_task_count': get_week_task_for_user(self.request.user).count()}
+        my_date = {'tasks': get_today_task_for_user(self.request.user)}
         return my_date
 
 
 class TaskListWeekView(TaskListView):
     def get_my_date(self) -> dict:
-        my_date = {'projects': get_projects_for_user(self.request.user),
-                   'tasks': get_week_task_for_user(self.request.user),
-                   'today_task_count': get_today_task_for_user(self.request.user).count(),
-                   'week_task_count': get_week_task_for_user(self.request.user).count()}
+        my_date = {'tasks': get_week_task_for_user(self.request.user)}
         return my_date
 
 
 class TaskArchiveView(TaskListView):
     def get_my_date(self) -> dict:
-        my_date = {'projects': get_projects_for_user(self.request.user),
-                   'tasks': get_archive_task_for_user(self.request.user)}
+        my_date = {'tasks': get_archive_task_for_user(self.request.user)}
         return my_date
 
 
@@ -89,22 +91,15 @@ class TaskAddView(View):
 
 
 class TaskUpdateView(TaskListView):
-    template_name = 'tasks/main_page.html'
-
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)
         if form.is_valid():
-            self._update_task_from_form(form, kwargs['uuid'])
-        return redirect('/')
+            self._update_task_from_form(form, kwargs['task_uuid'])
+        return redirect(request.META.get('HTTP_REFERER'))
 
     def get(self, request, *args, **kwargs):
-        self.uuid = kwargs['uuid']
-        return super().get(self, request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['selected_task'] = self.uuid
-        return context
+        request.session['task_uuid'] = kwargs.get('task_uuid')
+        return redirect(request.META.get('HTTP_REFERER'))
 
     @staticmethod
     def _update_task_from_form(form, task_uuid):
