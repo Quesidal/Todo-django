@@ -1,16 +1,18 @@
 {% extends 'tasks/base_main_page.html' %}
 
 {% block display_task %}
-    <li class="task">
+    {% if task.priority == '3' %}
+        <li class="task task-date-end">
+            {% else %}
+        <li class="task">
+    {% endif %}
         <span>
             {% if task.priority == '0' %}
                 <span class="priority" style="background-color: white"></span>
             {% elif task.priority == '1' %}
                 <span class="priority" style="background-color: orange"></span>
-            {% elif task.priority == '2' %}
-                <span class="priority" style="background-color: red"></span>
             {% else %}
-                <span class="priority" style="background-color: black"></span>
+                <span class="priority" style="background-color: red"></span>
             {% endif %}
             {% if task.state == True %}
                 <strike><span class="task-name">{{ task.text }} ------------- {{ task.end_time }}</span></strike>

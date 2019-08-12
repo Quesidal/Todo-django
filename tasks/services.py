@@ -8,11 +8,11 @@ def get_task_for_user(user: object) -> QuerySet:
 
 
 def get_today_task_for_user(user: object) -> QuerySet:
-    return Task.objects.filter(author=user).today().active()
+    return Task.objects.filter(author=user).today().active() | Task.objects.old_unfinished_task()
 
 
 def get_week_task_for_user(user: object) -> QuerySet:
-    return Task.objects.filter(author=user).week().active()
+    return Task.objects.filter(author=user).week().active() | Task.objects.old_unfinished_task()
 
 
 def get_task_for_uuid(uuid: str) -> Task:

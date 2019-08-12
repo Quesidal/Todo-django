@@ -50,25 +50,25 @@ class TaskListView(LoginRequiredMixin, ListView):
 class TaskListForProjectView(TaskListView):
     def get_my_date(self) -> dict:
         project = get_project_for_uuid(self.proj_uuid)
-        my_date = {'tasks': get_task_for_user(self.request.user).filter(project=project).active()}
+        my_date = {'tasks': get_task_for_user(self.request.user).filter(project=project).active().order_by('-priority')}
         return my_date
 
 
 class TaskListTodayView(TaskListView):
     def get_my_date(self) -> dict:
-        my_date = {'tasks': get_today_task_for_user(self.request.user)}
+        my_date = {'tasks': get_today_task_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
 class TaskListWeekView(TaskListView):
     def get_my_date(self) -> dict:
-        my_date = {'tasks': get_week_task_for_user(self.request.user)}
+        my_date = {'tasks': get_week_task_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
 class TaskArchiveView(TaskListView):
     def get_my_date(self) -> dict:
-        my_date = {'tasks': get_archive_task_for_user(self.request.user)}
+        my_date = {'tasks': get_archive_task_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 

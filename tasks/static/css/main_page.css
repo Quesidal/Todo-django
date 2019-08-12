@@ -270,6 +270,10 @@ a {
     padding: 5px;
 }
 
+.task-date-end {
+    background-color: #ffb5b5;
+}
+
 /*add task form start*/
 
 #add-task {
