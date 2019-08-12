@@ -11,12 +11,12 @@ PRIORITY = ((0, 'Low'),
 
 
 class TaskQuerySet(models.QuerySet):
+    def old_unfinished_task(self):
+        return self.filter(end_time__lt=datetime.date.today())
+
     def week(self):
         today = datetime.date.today()
         return self.filter(end_time__range=(today, today + datetime.timedelta(days=7)))
-
-    def today(self):
-        return self.filter(end_time__date=datetime.date.today())
 
     def old_unfinished_task(self):
         return self.filter(end_time__lt=datetime.date.today()).filter(state=False).filter(priority__lt=2)
@@ -33,7 +33,7 @@ class Task(UUIDTimestampedModel):
         choices=PRIORITY,
         default='Medium',
     )
-    objects = TaskQuerySet.as_manager()
+    objects = TaskManager()
 
     class Meta:
         verbose_name = 'Task'
