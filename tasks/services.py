@@ -1,6 +1,6 @@
 from django.db.models import QuerySet
 
-from .models import Task
+from .models import Task, Project
 
 
 def get_task_for_user(user: object) -> QuerySet:
@@ -27,3 +27,11 @@ def update_old_unfinished_tasks() -> int:
 
 def get_archive_task_for_user(user: object) -> QuerySet:
     return Task.objects.filter(author=user).filter(state=True)
+
+
+def get_project_for_uuid(uuid: str) -> Project:
+    return Project.objects.get(pk=uuid)
+
+
+def get_projects_for_user(user: object) -> QuerySet:
+    return Project.objects.filter(author=user)

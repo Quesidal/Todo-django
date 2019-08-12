@@ -20,7 +20,6 @@ from .views import SignInView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('tasks.urls')),
-    path('', include('projects.urls')),
 
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signin', SignInView.as_view(), name='sign in'),

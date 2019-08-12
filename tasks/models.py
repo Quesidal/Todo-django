@@ -1,39 +1,34 @@
 from django.db import models
 from django.conf import settings
 from django_utils.models import UUIDTimestampedModel
-from projects.models import Project
 
-import datetime
+from tasks.managers import TaskManager
 
 PRIORITY = ((0, 'Low'),
             (1, 'Medium'),
             (2, 'High'))
 
 
-class TaskQuerySet(models.QuerySet):
-    def old_unfinished_task(self):
-        return self.filter(end_time__lt=datetime.date.today())
+class Project(UUIDTimestampedModel):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='User')
+    name = models.CharField(max_length=255, verbose_name='Project name')
+    color = models.CharField(max_length=255, verbose_name='Project color')
 
-    def week(self):
-        today = datetime.date.today()
-        return self.filter(end_time__range=(today, today + datetime.timedelta(days=7)))
+    class Meta:
+        verbose_name = 'Project'
+        verbose_name_plural = 'Projects'
+        db_table = 'projects'
 
-    def today(self):
-        return self.filter(end_time__date=datetime.date.today())
+    def __str__(self):
+        return f'{self.name}'
 
-    def active(self):
-        return self.filter(state=False)
+    @property
+    def str_pk(self):
+        return str(self.pk)
 
-
-class TaskManager(models.Manager):
-    def get_queryset(self):
-        return TaskQuerySet(self.model, using=self._db)
-
-    def active(self):
-        return self.get_queryset().active()
-
-    def old_unfinished_task(self):
-        return self.get_queryset().old_unfinished_task()
+    @property
+    def count_active_task(self):
+        return Task.objects.filter(project=self).filter(state=False).count()
 
 
 class Task(UUIDTimestampedModel):
