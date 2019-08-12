@@ -1,70 +1,35 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.http import HttpResponseNotFound
+from django.shortcuts import redirect, get_object_or_404
 from django.views import View
-from django.views.generic import TemplateView, ListView
 
-from tasks.task_generator import run
+from .mixins import TaskListLoginMixin
 from .models import Task, Project
 from .forms import TaskForm, ProjectForm
-from .services import get_task_for_uuid, get_project_for_uuid
 
 
 # Displaing views
-class TaskListView(LoginRequiredMixin, ListView):
-    login_url = 'accounts/login/'
-    model = Task
-    template_name = "tasks/main_page.html"
 
-    def get(self, request, *args, **kwargs):
-        self.proj_uuid = kwargs.get('proj_uuid')  # request.session.get('selected_project') or
-        self.task_uuid = kwargs.get('task_uuid') or request.session.get('task_uuid')
-        self.edit_proj = request.session.get('edit_project')
-        self.drop_my_date_from_session(request)
-        return super().get(self, request, *args, **kwargs)
 
-    @staticmethod
-    def drop_my_date_from_session(request):
-        request.session['task_uuid'] = None
-        request.session['edit_project'] = None
-        request.session['selected_project'] = None
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        base_date = {'projects': Project.objects.filter(author=self.request.user),
-                     'today_task_count': Task.objects.today_tasks_for_user(self.request.user).count(),
-                     'week_task_count': Task.objects.week_tasks_for_user(self.request.user).count(),
-                     'selected_task': self.task_uuid,
-                     'selected_project': self.proj_uuid,
-                     'edit_project': self.edit_proj}
-        context.update(base_date)
-        context.update(self.get_my_date())
-        return context
-
+class TaskListForProjectView(TaskListLoginMixin):
     def get_my_date(self) -> dict:
-        my_date = {'tasks': Task.objects.tasks_for_user(self.request.user).order_by('-priority')}
-        return my_date
-
-
-class TaskListForProjectView(TaskListView):
-    def get_my_date(self) -> dict:
-        project = get_project_for_uuid(self.proj_uuid)
+        project = get_object_or_404(Project, pk=self.proj_uuid)
         my_date = {'tasks': Task.objects.tasks_for_user_and_project(self.request.user, project).order_by('-priority')}
         return my_date
 
 
-class TaskListTodayView(TaskListView):
+class TaskListTodayView(TaskListLoginMixin):
     def get_my_date(self) -> dict:
         my_date = {'tasks': Task.objects.today_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
-class TaskListWeekView(TaskListView):
+class TaskListWeekView(TaskListLoginMixin):
     def get_my_date(self) -> dict:
         my_date = {'tasks': Task.objects.week_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
-class TaskArchiveView(TaskListView):
+class TaskArchiveView(TaskListLoginMixin):
     def get_my_date(self) -> dict:
         my_date = {'tasks': Task.objects.archive_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
@@ -84,11 +49,11 @@ class TaskAddView(View):
         new_task.text = form.cleaned_data['text']
         new_task.end_time = form.cleaned_data['end_time']
         new_task.priority = form.cleaned_data['priority']
-        new_task.project = get_project_for_uuid(form.cleaned_data['project'])
+        new_task.project = get_object_or_404(Project, pk=form.cleaned_data['project'])
         new_task.save()
 
 
-class TaskUpdateView(TaskListView):
+class TaskUpdateView(TaskListLoginMixin):
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -101,35 +66,27 @@ class TaskUpdateView(TaskListView):
 
     @staticmethod
     def _update_task_from_form(form, task_uuid):
-        update_task = get_task_for_uuid(task_uuid)
+        update_task = get_object_or_404(Task, pk=task_uuid)
         update_task.text = form.cleaned_data['text']
         update_task.end_time = form.cleaned_data['end_time']
         update_task.priority = form.cleaned_data['priority']
-        update_task.project = get_project_for_uuid(form.cleaned_data['project'])
+        update_task.project = get_object_or_404(Project, pk=form.cleaned_data['project'])
         update_task.save()
 
 
 class TaskDeleteView(View):
     def get(self, request, *args, **kwargs):
-        old_task = get_task_for_uuid(kwargs['task_uuid'])
+        old_task = get_object_or_404(Task, pk=kwargs['task_uuid'])
         old_task.delete()
         return redirect(request.META.get('HTTP_REFERER'))
 
 
 class TaskDoneView(View):
     def get(self, request, *args, **kwargs):
-        done_task = get_task_for_uuid(kwargs['task_uuid'])
+        done_task = get_object_or_404(Task, pk=kwargs['task_uuid'])
         done_task.state = True
         done_task.save()
         return redirect(request.META.get('HTTP_REFERER'))
-
-
-class TaskGenView(TemplateView):
-    template_name = "tasks/base_main_page.html"
-
-    def get(self, request, *args, **kwargs):
-        run()
-        return redirect('/')
 
 
 # project views
@@ -138,7 +95,7 @@ class ProjectAddView(View):
         form = ProjectForm(request.POST)
         if form.is_valid():
             self._save_project_from_form(form)
-        return redirect('/')
+        return redirect(request.META.get('HTTP_REFERER'))
 
     def _save_project_from_form(self, form):
         new_project = Project()
@@ -150,13 +107,14 @@ class ProjectAddView(View):
 
 class ProjectDeleteView(View):
     def get(self, request, *args, **kwargs):
-        old_proj = get_project_for_uuid(kwargs['proj_uuid'])
+        old_proj = get_object_or_404(Project, pk=kwargs['proj_uuid'])
         if old_proj.count_active_task == 0:
             old_proj.delete()
-        return redirect('/')
+            return redirect('/')
+        return HttpResponseNotFound('<h1>Sorry, project have tasks</h1>')
 
 
-class ProjectUpdateView(TaskListView):
+class ProjectUpdateView(TaskListLoginMixin):
     template_name = 'tasks/main_page.html'
 
     def post(self, request, *args, **kwargs):
@@ -171,7 +129,7 @@ class ProjectUpdateView(TaskListView):
 
     @staticmethod
     def _update_proj_from_form(form, proj_uuid):
-        update_proj = get_project_for_uuid(proj_uuid)
+        update_proj = get_object_or_404(Project, pk=proj_uuid)
         update_proj.name = form.cleaned_data['name']
         update_proj.color = form.cleaned_data['color']
         update_proj.save()

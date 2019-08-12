@@ -1,12 +1,25 @@
+import uuid
+
 from django.db import models
 from django.conf import settings
-from django_utils.models import UUIDTimestampedModel
+from django_extensions.db.models import TimeStampedModel
 
-from tasks.managers import TaskManager
+from .managers import TaskManager
 
 PRIORITY = ((0, 'Low'),
             (1, 'Medium'),
             (2, 'High'))
+
+
+class UUIDTimestampedModel(TimeStampedModel):
+    """
+    Abstract base model,
+    Overrides ID with UUID4, inherits TimeStampedModel
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    class Meta:
+        abstract = True
 
 
 class Project(UUIDTimestampedModel):
