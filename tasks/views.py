@@ -6,8 +6,7 @@ from django.views.generic import TemplateView, ListView
 from tasks.task_generator import run
 from .models import Task, Project
 from .forms import TaskForm, ProjectForm
-from .services import get_task_for_user, get_task_for_uuid, get_today_task_for_user, get_week_task_for_user, \
-    get_archive_task_for_user, update_old_unfinished_tasks, get_projects_for_user, get_project_for_uuid
+from .services import get_task_for_uuid, get_project_for_uuid
 
 
 # Displaing views
@@ -31,9 +30,9 @@ class TaskListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        base_date = {'projects': get_projects_for_user(self.request.user),
-                     'today_task_count': get_today_task_for_user(self.request.user).count(),
-                     'week_task_count': get_week_task_for_user(self.request.user).count(),
+        base_date = {'projects': Project.objects.filter(author=self.request.user),
+                     'today_task_count': Task.objects.today_tasks_for_user(self.request.user).count(),
+                     'week_task_count': Task.objects.week_tasks_for_user(self.request.user).count(),
                      'selected_task': self.task_uuid,
                      'selected_project': self.proj_uuid,
                      'edit_project': self.edit_proj}
@@ -42,32 +41,32 @@ class TaskListView(LoginRequiredMixin, ListView):
         return context
 
     def get_my_date(self) -> dict:
-        my_date = {'tasks': get_task_for_user(self.request.user).order_by('-priority')}
+        my_date = {'tasks': Task.objects.tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
 class TaskListForProjectView(TaskListView):
     def get_my_date(self) -> dict:
         project = get_project_for_uuid(self.proj_uuid)
-        my_date = {'tasks': get_task_for_user(self.request.user).filter(project=project).active().order_by('-priority')}
+        my_date = {'tasks': Task.objects.tasks_for_user_and_project(self.request.user, project).order_by('-priority')}
         return my_date
 
 
 class TaskListTodayView(TaskListView):
     def get_my_date(self) -> dict:
-        my_date = {'tasks': get_today_task_for_user(self.request.user).order_by('-priority')}
+        my_date = {'tasks': Task.objects.today_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
 class TaskListWeekView(TaskListView):
     def get_my_date(self) -> dict:
-        my_date = {'tasks': get_week_task_for_user(self.request.user).order_by('-priority')}
+        my_date = {'tasks': Task.objects.week_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
 class TaskArchiveView(TaskListView):
     def get_my_date(self) -> dict:
-        my_date = {'tasks': get_archive_task_for_user(self.request.user).order_by('-priority')}
+        my_date = {'tasks': Task.objects.archive_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
@@ -133,16 +132,6 @@ class TaskGenView(TemplateView):
         return redirect('/')
 
 
-from django.core.signals import request_finished
-from django.dispatch import receiver
-
-
-@receiver(request_finished)
-def my_callback(sender, **kwargs):
-    update_old_unfinished_tasks()
-    # print(str(update_old_unfinished_tasks()) + 'tasks was updated')
-
-
 # project views
 class ProjectAddView(View):
     def post(self, request, *args, **kwargs):
@@ -186,3 +175,4 @@ class ProjectUpdateView(TaskListView):
         update_proj.name = form.cleaned_data['name']
         update_proj.color = form.cleaned_data['color']
         update_proj.save()
+
