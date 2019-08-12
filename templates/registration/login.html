@@ -2,17 +2,20 @@
 
 {% block content %}
     <div class="wrap">
-        <h1>Please Sign In</h1>
+        <h1>Please Log In</h1>
 
-        {% if form.errors %}
-            <p>Your username and password didn't match. Please try again.</p>
-        {% endif %}
 
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
             <td>{{ form.username }}</td>
             <td>{{ form.password }}</td>
-            <input type="submit" value="login"/>
+            <input class="accept-btn" type="submit" value="login"/>
+        </form>
+        <form method="get" action="/accounts/signin">
+            <input class="accept-btn" type="submit" value="Sign In"/>
         </form>
     </div>
+    {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
 {% endblock %}
