@@ -167,7 +167,7 @@
         </div>
         <div class="buttons">
             <input type="submit" class="add" value="add"/>
-            <a class="cancel" href="/">Cancel</a>
+            <a class="cancel" href="{{ request.META.HTTP_REFERER }}">Cancel</a>
         </div>
     </form>
 {% endblock %}

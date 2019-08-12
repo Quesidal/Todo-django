@@ -10,6 +10,15 @@ a {
     color: black;
 }
 
+.main-header a {
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
 .main-header {
     display: flex;
     justify-content: space-between;
@@ -17,6 +26,7 @@ a {
     background-color: dodgerblue;
     color: white;
 }
+
 
 .section {
     display: flex;

@@ -23,6 +23,7 @@
 <section class="section">
     <div class="sidebar">
         <div class="period">
+            {#            todo: configurate task count#}
             <div class="period-item"><a href="/">Today</a><span>{{ today_task_count }}</span></div>
             <div class="period-item"><a href="/task/week">Next 7 days</a><span>{{ week_task_count }}</span></div>
         </div>
@@ -33,13 +34,11 @@
             <ul class="projects-list">
                 {% for project in projects %}
                     {% if project.str_pk == selected_project %}
-                        {% if edit_project == True %}
-                            {% block edit_project %}
-                            {% endblock %}
-                        {% else %}
-                            {% block display_selected_project %}
-                            {% endblock %}
-                        {% endif %}
+                        {% block display_selected_project %}
+                        {% endblock %}
+                    {% elif  project.str_pk == edit_project %}
+                        {% block edit_project %}
+                        {% endblock %}
                     {% else %}
                         {% block display_project %}
                         {% endblock %}
@@ -57,6 +56,7 @@
     <main class="main-content">
         <div class="date-container">
             <span class="day">Today</span>
+            {#            todo: add autodate#}
             <span class="date">Tu 14 march</span>
         </div>
 
