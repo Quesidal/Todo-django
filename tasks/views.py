@@ -113,14 +113,14 @@ class TaskUpdateView(TaskListView):
 
 class TaskDeleteView(View):
     def get(self, request, *args, **kwargs):
-        old_task = get_task_for_uuid(kwargs['uuid'])
+        old_task = get_task_for_uuid(kwargs['task_uuid'])
         old_task.delete()
         return redirect(request.META.get('HTTP_REFERER'))
 
 
 class TaskDoneView(View):
     def get(self, request, *args, **kwargs):
-        done_task = get_task_for_uuid(kwargs['uuid'])
+        done_task = get_task_for_uuid(kwargs['task_uuid'])
         done_task.state = True
         done_task.save()
         return redirect(request.META.get('HTTP_REFERER'))
