@@ -28,9 +28,9 @@
                 <span class="circle"></span>
                 <span class="circle"></span>
                 <span class="actions-container">
-                    <a class="action-btn" href="/task/done/{{ task.str_pk }}">Done</a>
-                    <a class="action-btn" href="/task/update/{{ task.str_pk }}">Edit</a>
-                    <a class="action-btn" href="/task/delete/{{ task.str_pk }}">Delete</a>
+                    <a class="action-btn" href="/task/done/{{ task.pk|stringformat:"s" }}">Done</a>
+                    <a class="action-btn" href="/task/update/{{ task.pk|stringformat:"s" }}">Edit</a>
+                    <a class="action-btn" href="/task/delete/{{ task.pk|stringformat:"s" }}">Delete</a>
                 </span>
             </span>
         </span>
@@ -67,10 +67,10 @@
             </select>
             <select name="project" id="">
                 {% for project in projects %}
-                    {% if task.project.str_pk == project.str_pk %}
-                        <option selected value="{{ project.str_pk }}">{{ project }}</option>
+                    {% if task.project.pk|stringformat:"s" == project.pk|stringformat:"s" %}
+                        <option selected value="{{ project.pk|stringformat:"s" }}">{{ project }}</option>
                     {% else %}
-                        <option value="{{ project.str_pk }}">{{ project }}</option>
+                        <option value="{{ project.pk|stringformat:"s" }}">{{ project }}</option>
                     {% endif %}
                 {% endfor %}
             </select>
@@ -95,7 +95,7 @@
             </select>
             <select name="project" id="">
                 {% for project in projects %}
-                    <option value="{{ project.str_pk }}">{{ project }}</option>
+                    <option value="{{ project.pk|stringformat:"s" }}">{{ project }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -103,11 +103,11 @@
 {% endblock %}
 
 {% block display_project %}
-    <li class="project" id="project-{{ project.str_pk }}">
+    <li class="project" id="project-{{ project.pk|stringformat:"s" }}">
         <span class="project-tag" style="background-color: {{ project.color }}"></span>
-        <a class="project-name" href="/task/project/{{ project.str_pk }}">{{ project.name }}</a>
+        <a class="project-name" href="/task/project/{{ project.pk|stringformat:"s" }}">{{ project.name }}</a>
         <span class="task-counter"
-              id="proj-task-counter-{{ project.str_pk }}">{{ project.count_active_task }}</span>
+              id="proj-task-counter-{{ project.pk|stringformat:"s" }}">{{ project.count_active_task }}</span>
         </span>
         <span>
             <span class="project-actions">
@@ -115,9 +115,9 @@
                 <span class="circle"></span>
                 <span class="circle"></span>
                 <span class="actions-container">
-                    <a class="action-btn edit-proj" id="proj-edit-btn-{{ project.str_pk }}"
-                       href="/project/update/{{ project.str_pk }}">Edit</a>
-                    <a class="action-btn delete-proj" id="proj-del-btn-{{ project.str_pk }}">Delete</a>
+                    <a class="action-btn edit-proj" id="proj-edit-btn-{{ project.pk|stringformat:"s" }}"
+                       href="/project/update/{{ project.pk|stringformat:"s" }}">Edit</a>
+                    <a class="action-btn delete-proj" id="proj-del-btn-{{ project.pk|stringformat:"s" }}">Delete</a>
                 </span>
             </span>
         </span>
@@ -128,9 +128,9 @@
     <li class="project" style="background-color:rgb(255,255,255);">
         <span>
             <span class="project-tag" style="background-color: {{ project.color }}"></span>
-            <a class="project-name" href="/task/project/{{ project.str_pk }}">{{ project.name }}</a>
+            <a class="project-name" href="/task/project/{{ project.pk|stringformat:"s" }}">{{ project.name }}</a>
             <span class="task-counter"
-                  id="proj-task-counter-{{ project.str_pk }}">{{ project.count_active_task }}</span>
+                  id="proj-task-counter-{{ project.pk|stringformat:"s" }}">{{ project.count_active_task }}</span>
         </span>
         <span>
             <span class="project-actions">
@@ -138,8 +138,8 @@
                 <span class="circle"></span>
                 <span class="circle"></span>
                 <span class="actions-container">
-                    <a class="action-btn" href="/project/update/{{ project.str_pk }}">Edit</a>
-                    <a class="action-btn delete-proj" id="proj-del-btn-{{ project.str_pk }}">Delete</a>
+                    <a class="action-btn" href="/project/update/{{ project.pk|stringformat:"s" }}">Edit</a>
+                    <a class="action-btn delete-proj" id="proj-del-btn-{{ project.pk|stringformat:"s" }}">Delete</a>
                 </span>
             </span>
         </span>
@@ -161,7 +161,7 @@
 {% endblock %}
 
 {% block edit_project %}
-    <form class="add-proj-form" action="/project/update/{{ selected_project }}" method="post">
+    <form class="add-proj-form" action="/project/update/{{ edit_project }}" method="post">
         {% csrf_token %}
         <div class="inputs">
             <input name="color" class="input color-proj" type="color" value="{{ project.color }}">

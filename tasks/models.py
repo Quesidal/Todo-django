@@ -23,10 +23,6 @@ class Project(UUIDTimestampedModel):
         return f'{self.name}'
 
     @property
-    def str_pk(self):
-        return str(self.pk)
-
-    @property
     def count_active_task(self):
         return Task.objects.filter(project=self).filter(state=False).count()
 
@@ -51,7 +47,3 @@ class Task(UUIDTimestampedModel):
 
     def __str__(self):
         return f'{self.text}'
-
-    @property
-    def str_pk(self):
-        return str(self.pk)

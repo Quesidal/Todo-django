@@ -33,11 +33,11 @@
             </div>
             <ul class="projects-list">
                 {% for project in projects %}
-                    {% if project.str_pk == selected_project %}
-                        {% block display_selected_project %}
-                        {% endblock %}
-                    {% elif  project.str_pk == edit_project %}
+                    {% if  project.pk|stringformat:"s" == edit_project %}
                         {% block edit_project %}
+                        {% endblock %}
+                    {% elif project.pk|stringformat:"s" == selected_project %}
+                        {% block display_selected_project %}
                         {% endblock %}
                     {% else %}
                         {% block display_project %}
@@ -62,7 +62,7 @@
 
         <ul class="task-list">
             {% for task in tasks %}
-                {% if task.str_pk == selected_task %}
+                {% if task.pk|stringformat:"s" == selected_task %}
                     {% block editing_task %}
                     {% endblock %}
                 {% else %}
