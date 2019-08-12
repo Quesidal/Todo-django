@@ -16,5 +16,4 @@ urlpatterns = [
 
     path('task/week', TaskListWeekView.as_view(), name='task for week'),
     path('task/archive', TaskArchiveView.as_view(), name='task archive'),
-    path('task/all', TaskListView.as_view(), name='task all'),
 ]

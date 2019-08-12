@@ -78,7 +78,7 @@ class TaskAddView(View):
         form = TaskForm(request.POST)
         if form.is_valid():
             self._save_task_from_form(form)
-        return redirect(request.META.get('HTTP_REFERER'))
+        return redirect('/')
 
     def _save_task_from_form(self, form):
         new_task = Task()
@@ -139,5 +139,6 @@ from django.dispatch import receiver
 
 
 @receiver(request_finished)
-def task_updater(sender, **kwargs):
+def my_callback(sender, **kwargs):
     update_old_unfinished_tasks()
+    # print(str(update_old_unfinished_tasks()) + 'tasks was updated')

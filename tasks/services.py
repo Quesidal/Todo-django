@@ -21,7 +21,7 @@ def get_task_for_uuid(uuid: str) -> Task:
 
 def update_old_unfinished_tasks() -> int:
     old_tasks = Task.objects.old_unfinished_task()
-    old_tasks.update(priority='3')
+    old_tasks.update(priority='3', text='updated tasks')
     return old_tasks.count()
 
 
