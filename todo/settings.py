@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).ancestor(2)
 SECRET_KEY = 'vo3+%!couc9srdaez7sl297g+2jzkaecuggf_&d7*@0$+zhe-i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "https://test-task-todo.herokuapp.com"]
 
 # Application definition
 
