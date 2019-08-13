@@ -37,3 +37,9 @@ python manage.py setup_test_date
 ```
 
 - Перейдите на главную страницу проекта, и войдите с тестовыми даными
+
+Задеплоеный проект на Heroku https://test-task-todo.herokuapp.com
+
+~~~~
+- Username: Ashley0
+- Password: Ashley0
