@@ -7,7 +7,7 @@ const showAddTaskForm = () => {
         Swal.fire({
             type: 'warning',
             title: 'Oops...',
-            text: 'You have  unresolved tasks!',
+            text: 'Please, add project first!',
         })
     } else {
         addTaskForm.style.display = 'flex';
