@@ -44,13 +44,13 @@ class TaskAddView(View):
         return redirect('/')
 
     def _save_task_from_form(self, form):
-        new_task = Task()
-        new_task.author = self.request.user
-        new_task.text = form.cleaned_data['text']
-        new_task.end_time = form.cleaned_data['end_time']
-        new_task.priority = form.cleaned_data['priority']
-        new_task.project = get_object_or_404(Project, pk=form.cleaned_data['project'])
-        new_task.save()
+        Task.objects.create(
+            author=self.request.user,
+            text=form.cleaned_data['text'],
+            end_time=form.cleaned_data['end_time'],
+            priority=form.cleaned_data['priority'],
+            project=get_object_or_404(Project, pk=form.cleaned_data['project'])
+        )
 
 
 class TaskUpdateView(TaskListLoginMixin):
@@ -66,12 +66,13 @@ class TaskUpdateView(TaskListLoginMixin):
 
     @staticmethod
     def _update_task_from_form(form, task_uuid):
-        update_task = get_object_or_404(Task, pk=task_uuid)
-        update_task.text = form.cleaned_data['text']
-        update_task.end_time = form.cleaned_data['end_time']
-        update_task.priority = form.cleaned_data['priority']
-        update_task.project = get_object_or_404(Project, pk=form.cleaned_data['project'])
-        update_task.save()
+        Task.objects.update(
+            pk=task_uuid,
+            text=form.cleaned_data['text'],
+            end_time=form.cleaned_data['end_time'],
+            priority=form.cleaned_data['priority'],
+            project=get_object_or_404(Project, pk=form.cleaned_data['project'])
+        )
 
 
 class TaskDeleteView(View):
@@ -83,9 +84,10 @@ class TaskDeleteView(View):
 
 class TaskDoneView(View):
     def get(self, request, *args, **kwargs):
-        done_task = get_object_or_404(Task, pk=kwargs['task_uuid'])
-        done_task.state = True
-        done_task.save()
+        Task.objects.update(
+            pk=kwargs['task_uuid'],
+            state=True
+        )
         return redirect(request.META.get('HTTP_REFERER'))
 
 
@@ -98,11 +100,11 @@ class ProjectAddView(View):
         return redirect(request.META.get('HTTP_REFERER'))
 
     def _save_project_from_form(self, form):
-        new_project = Project()
-        new_project.author = self.request.user
-        new_project.name = form.cleaned_data['name']
-        new_project.color = form.cleaned_data['color']
-        new_project.save()
+        Project.objects.create(
+            author=self.request.user,
+            name=form.cleaned_data['name'],
+            color=form.cleaned_data['color']
+        )
 
 
 class ProjectDeleteView(View):
@@ -129,8 +131,8 @@ class ProjectUpdateView(TaskListLoginMixin):
 
     @staticmethod
     def _update_proj_from_form(form, proj_uuid):
-        update_proj = get_object_or_404(Project, pk=proj_uuid)
-        update_proj.name = form.cleaned_data['name']
-        update_proj.color = form.cleaned_data['color']
-        update_proj.save()
-
+        Project.objects.update(
+            pk=proj_uuid,
+            name=form.cleaned_data['name'],
+            color=form.cleaned_data['color']
+        )
