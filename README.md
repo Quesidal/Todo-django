@@ -13,7 +13,7 @@ Python 3.6 + Django
 2. Создайте базу данных применив миграции
 ```python manage.py migrate```
 3. Запустите сервер командой
-```py manage.py runserver```
+```python manage.py runserver```
 4. После запуска, доступ к сайту можно будет получить по адресу http://127.0.0.1:8000/
 
 
@@ -24,7 +24,6 @@ Python 3.6 + Django
 4. ```python manage.py gen_tasks``` - создает 10 новых задач
 
 Пример использования:
-- Запустите проект
 - Создайте тестовый датасет командой `python manage.py setup_test_date`
 ```
 python manage.py setup_test_date
@@ -35,8 +34,8 @@ python manage.py setup_test_date
 # ...
 # User1  username: Shane1  password: Shane1````
 ```
-
-- Перейдите на главную страницу проекта, и войдите с тестовыми даными
+- Запустите проект `python manage.py runserver`
+- Перейдите на главную страницу проекта, и войдите с тестовыми данными
 
 Задеплоеный проект на Heroku https://test-task-todo.herokuapp.com
 
