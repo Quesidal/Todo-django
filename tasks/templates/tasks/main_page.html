@@ -1,4 +1,5 @@
 {% extends 'tasks/base_main_page.html' %}
+{% load task_extras %}
 
 {% block display_task %}
     {% if task.priority == '3' %}
@@ -107,7 +108,7 @@
         <span class="project-tag" style="background-color: {{ project.color }}"></span>
         <a class="project-name" href="/task/project/{{ project.pk|stringformat:"s" }}">{{ project.name }}</a>
         <span class="task-counter"
-              id="proj-task-counter-{{ project.pk|stringformat:"s" }}">{{ project.count_active_task }}</span>
+              id="proj-task-counter-{{ project.pk|stringformat:"s" }}">{% task_count_for_user_project user project %}</span>
         </span>
         <span>
             <span class="project-actions">
@@ -130,7 +131,7 @@
             <span class="project-tag" style="background-color: {{ project.color }}"></span>
             <a class="project-name" href="/task/project/{{ project.pk|stringformat:"s" }}">{{ project.name }}</a>
             <span class="task-counter"
-                  id="proj-task-counter-{{ project.pk|stringformat:"s" }}">{{ project.count_active_task }}</span>
+                  id="proj-task-counter-{{ project.pk|stringformat:"s" }}">{% task_count_for_user_project user project %}</span>
         </span>
         <span>
             <span class="project-actions">

@@ -22,10 +22,6 @@ class Project(UUIDTimestampedModel):
     def __str__(self):
         return f'{self.name}'
 
-    @property
-    def count_active_task(self):
-        return Task.objects.filter(project=self).filter(state=False).count()
-
 
 class Task(UUIDTimestampedModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='User')

@@ -109,10 +109,8 @@ class ProjectAddView(View):
 class ProjectDeleteView(View):
     def get(self, request, *args, **kwargs):
         old_proj = get_object_or_404(Project, pk=kwargs['proj_uuid'])
-        if old_proj.count_active_task == 0:
-            old_proj.delete()
-            return redirect('/')
-        return HttpResponseNotFound('<h1>Sorry, project have tasks</h1>')
+        old_proj.delete()
+        return redirect('/')
 
 
 class ProjectUpdateView(TaskListLoginMixin):
