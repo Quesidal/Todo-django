@@ -7,32 +7,28 @@
             {% else %}
         <li class="task">
     {% endif %}
-        <span>
-            {% if task.priority == '0' %}
-                <span class="priority" style="background-color: white"></span>
-            {% elif task.priority == '1' %}
-                <span class="priority" style="background-color: orange"></span>
-            {% else %}
-                <span class="priority" style="background-color: red"></span>
-            {% endif %}
-            {% if task.state == True %}
-                <strike><span class="task-name">{{ task.text }} ------------- {{ task.end_time }}</span></strike>
-            {% else %}
-                <span class="task-name">{{ task.text }} ------------- {{ task.end_time }}</span>
-            {% endif %}
-        </span>
-        <span>
-            <span class="project">{{ task.project }}</span>
-            <span class="project-tag" style="background-color: {{ task.project.color }}"></span>
-            <span class="task-actions">
-                <span class="circle"></span>
-                <span class="circle"></span>
-                <span class="circle"></span>
-                <span class="actions-container">
-                    <a class="action-btn" href="/task/done/{{ task.pk|stringformat:"s" }}">Done</a>
-                    <a class="action-btn" href="/task/update/{{ task.pk|stringformat:"s" }}">Edit</a>
-                    <a class="action-btn" href="/task/delete/{{ task.pk|stringformat:"s" }}">Delete</a>
-                </span>
+{% if task.priority == '0' %}
+    <span class="priority" style="background-color: white"></span>
+{% elif task.priority == '1' %}
+    <span class="priority" style="background-color: orange"></span>
+{% else %}
+    <span class="priority" style="background-color: red"></span>
+{% endif %}
+{% if task.state == True %}
+    <span class="task-name archive-task">{{ task.text }} ------------- {{ task.end_time }}</span>
+{% else %}
+    <span class="task-name">{{ task.text }} ------------- {{ task.end_time }}</span>
+{% endif %}
+<span class="project">{{ task.project }}</span>
+<span class="project-tag" style="background-color: {{ task.project.color }}"></span>
+<span class="task-actions">
+            <span class="circle"></span>
+            <span class="circle"></span>
+            <span class="circle"></span>
+            <span class="actions-container">
+                <a class="action-btn" href="/task/done/{{ task.pk|stringformat:"s" }}">Done</a>
+                <a class="action-btn" href="/task/update/{{ task.pk|stringformat:"s" }}">Edit</a>
+                <a class="action-btn" href="/task/delete/{{ task.pk|stringformat:"s" }}">Delete</a>
             </span>
         </span>
     </li>
@@ -51,7 +47,6 @@
             <input type="submit" class="add" value="submit"/>
             <a class="cancel" id='cancel edit' href="{{ request.META.HTTP_REFERER }}">Cancel</a>
             <select name="priority" id="">
-                {#Todo: fix this bad code#}
                 {% if task.priority == '0' %}
                     <option selected value="0">LOW</option>
                     <option value="1">MEDIUM</option>
@@ -110,16 +105,14 @@
         <span class="task-counter"
               id="proj-task-counter-{{ project.pk|stringformat:"s" }}">{% task_count_for_user_project user project %}</span>
         </span>
-        <span>
-            <span class="project-actions">
-                <span class="circle"></span>
-                <span class="circle"></span>
-                <span class="circle"></span>
-                <span class="actions-container">
-                    <a class="action-btn edit-proj" id="proj-edit-btn-{{ project.pk|stringformat:"s" }}"
-                       href="/project/update/{{ project.pk|stringformat:"s" }}">Edit</a>
-                    <a class="action-btn delete-proj" id="proj-del-btn-{{ project.pk|stringformat:"s" }}">Delete</a>
-                </span>
+        <span class="project-actions">
+            <span class="circle"></span>
+            <span class="circle"></span>
+            <span class="circle"></span>
+            <span class="actions-container">
+                <a class="action-btn edit-proj" id="proj-edit-btn-{{ project.pk|stringformat:"s" }}"
+                   href="/project/update/{{ project.pk|stringformat:"s" }}">Edit</a>
+                <a class="action-btn delete-proj" id="proj-del-btn-{{ project.pk|stringformat:"s" }}">Delete</a>
             </span>
         </span>
     </li>
@@ -127,21 +120,17 @@
 
 {% block display_selected_project %}
     <li class="project" style="background-color:rgb(255,255,255);">
-        <span>
-            <span class="project-tag" style="background-color: {{ project.color }}"></span>
-            <a class="project-name" href="/task/project/{{ project.pk|stringformat:"s" }}">{{ project.name }}</a>
-            <span class="task-counter"
-                  id="proj-task-counter-{{ project.pk|stringformat:"s" }}">{% task_count_for_user_project user project %}</span>
-        </span>
-        <span>
-            <span class="project-actions">
-                <span class="circle"></span>
-                <span class="circle"></span>
-                <span class="circle"></span>
-                <span class="actions-container">
-                    <a class="action-btn" href="/project/update/{{ project.pk|stringformat:"s" }}">Edit</a>
-                    <a class="action-btn delete-proj" id="proj-del-btn-{{ project.pk|stringformat:"s" }}">Delete</a>
-                </span>
+        <span class="project-tag" style="background-color: {{ project.color }}"></span>
+        <a class="project-name" href="/task/project/{{ project.pk|stringformat:"s" }}">{{ project.name }}</a>
+        <span class="task-counter"
+              id="proj-task-counter-{{ project.pk|stringformat:"s" }}">{% task_count_for_user_project user project %}</span>
+        <span class="project-actions">
+            <span class="circle"></span>
+            <span class="circle"></span>
+            <span class="circle"></span>
+            <span class="actions-container">
+                <a class="action-btn" href="/project/update/{{ project.pk|stringformat:"s" }}">Edit</a>
+                <a class="action-btn delete-proj" id="proj-del-btn-{{ project.pk|stringformat:"s" }}">Delete</a>
             </span>
         </span>
     </li>

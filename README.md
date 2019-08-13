@@ -1,5 +1,5 @@
 # Todo-django
-Python + Django
+Python 3.6 + Django
 
 Установка:
 1. Установите Python 3.6 https://www.python.org/
@@ -10,11 +10,30 @@ Python + Django
 
 Запуск проекта:
 1. Перейдите в главную директорию проекта
-2. Выполните команду 
+2. Создайте базу данных применив миграции
+```python manage.py migrate```
+3. Запустите сервер командой
 ```py manage.py runserver```
-3. После запуска, доступ к сайту можно будет получить по адресу http://127.0.0.1:8000/
+4. После запуска, доступ к сайту можно будет получить по адресу http://127.0.0.1:8000/
 
 
 Дополнительные команды:
-1. ```python manage.py gen_tasks``` - создает 10 новых задач и 10 проектов(если они отсутствуют)
-2. ```python manage.py gen_projects``` - создает 10 новых проектов
+1. ```python manage.py setup_test_date``` - генерирует тестовый датасет(1 пользователь 4 проекта 40 задач)
+2. ```python manage.py gen_users``` - создает 2 новых пользователя
+3. ```python manage.py gen_projects``` - создает 4 новых проекта
+4. ```python manage.py gen_tasks``` - создает 10 новых задач
+
+Пример использования:
+- Запустите проект
+- Создайте тестовый датасет командой `python manage.py setup_test_date`
+```
+python manage.py setup_test_date
+
+# Project1  Johnson-Briggs
+# ...
+# Task16  Sign if dream imagine after knowledge themselves. ...
+# ...
+# User1  username: Shane1  password: Shane1````
+```
+
+- Перейдите на главную страницу проекта, и войдите с тестовыми даными
