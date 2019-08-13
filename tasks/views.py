@@ -2,7 +2,7 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, get_object_or_404
 from django.views import View
 
-from .mixins import TaskListLoginMixin
+from .mixins import BaseTaskListMixin
 from .models import Task, Project
 from .forms import TaskForm, ProjectForm
 
@@ -10,26 +10,26 @@ from .forms import TaskForm, ProjectForm
 # Displaing views
 
 
-class TaskListForProjectView(TaskListLoginMixin):
+class TaskListForProjectView(BaseTaskListMixin):
     def get_my_data(self) -> dict:
         project = get_object_or_404(Project, pk=self.proj_uuid)
         my_date = {'tasks': Task.objects.tasks_for_user_and_project(self.request.user, project).order_by('-priority')}
         return my_date
 
 
-class TaskListTodayView(TaskListLoginMixin):
+class TaskListTodayView(BaseTaskListMixin):
     def get_my_data(self) -> dict:
         my_date = {'tasks': Task.objects.today_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
-class TaskListWeekView(TaskListLoginMixin):
+class TaskListWeekView(BaseTaskListMixin):
     def get_my_data(self) -> dict:
         my_date = {'tasks': Task.objects.week_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
-class TaskArchiveView(TaskListLoginMixin):
+class TaskArchiveView(BaseTaskListMixin):
     def get_my_data(self) -> dict:
         my_date = {'tasks': Task.objects.archive_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
@@ -54,7 +54,7 @@ class TaskAddView(View):
         )
 
 
-class TaskUpdateView(TaskListLoginMixin):
+class TaskUpdateView(BaseTaskListMixin):
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -113,7 +113,7 @@ class ProjectDeleteView(View):
         return redirect('/')
 
 
-class ProjectUpdateView(TaskListLoginMixin):
+class ProjectUpdateView(BaseTaskListMixin):
     template_name = 'tasks/main_page.html'
 
     def post(self, request, *args, **kwargs):

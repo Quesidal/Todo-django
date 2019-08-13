@@ -3,7 +3,7 @@ from django.views.generic import ListView
 from .models import Task, Project
 
 
-class TaskListLoginMixin(LoginRequiredMixin, ListView):
+class BaseTaskListMixin(LoginRequiredMixin, ListView):
     login_url = 'accounts/login/'
     model = Task
     template_name = "tasks/main_page.html"
