@@ -11,26 +11,26 @@ from .forms import TaskForm, ProjectForm
 
 
 class TaskListForProjectView(TaskListLoginMixin):
-    def get_my_date(self) -> dict:
+    def get_my_data(self) -> dict:
         project = get_object_or_404(Project, pk=self.proj_uuid)
         my_date = {'tasks': Task.objects.tasks_for_user_and_project(self.request.user, project).order_by('-priority')}
         return my_date
 
 
 class TaskListTodayView(TaskListLoginMixin):
-    def get_my_date(self) -> dict:
+    def get_my_data(self) -> dict:
         my_date = {'tasks': Task.objects.today_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
 class TaskListWeekView(TaskListLoginMixin):
-    def get_my_date(self) -> dict:
+    def get_my_data(self) -> dict:
         my_date = {'tasks': Task.objects.week_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
 
 class TaskArchiveView(TaskListLoginMixin):
-    def get_my_date(self) -> dict:
+    def get_my_data(self) -> dict:
         my_date = {'tasks': Task.objects.archive_tasks_for_user(self.request.user).order_by('-priority')}
         return my_date
 
@@ -44,12 +44,13 @@ class TaskAddView(View):
         return redirect('/')
 
     def _save_task_from_form(self, form):
+        project = get_object_or_404(Project, pk=form.cleaned_data['project'])
         Task.objects.create(
             author=self.request.user,
             text=form.cleaned_data['text'],
             end_time=form.cleaned_data['end_time'],
             priority=form.cleaned_data['priority'],
-            project=get_object_or_404(Project, pk=form.cleaned_data['project'])
+            project=project
         )
 
 
@@ -66,13 +67,12 @@ class TaskUpdateView(TaskListLoginMixin):
 
     @staticmethod
     def _update_task_from_form(form, task_uuid):
-        Task.objects.update(
-            pk=task_uuid,
-            text=form.cleaned_data['text'],
-            end_time=form.cleaned_data['end_time'],
-            priority=form.cleaned_data['priority'],
-            project=get_object_or_404(Project, pk=form.cleaned_data['project'])
-        )
+        update_task = get_object_or_404(Task, pk=task_uuid)
+        update_task.text = form.cleaned_data['text']
+        update_task.end_time = form.cleaned_data['end_time']
+        update_task.priority = form.cleaned_data['priority']
+        update_task.project = get_object_or_404(Project, pk=form.cleaned_data['project'])
+        update_task.save()
 
 
 class TaskDeleteView(View):
@@ -84,10 +84,9 @@ class TaskDeleteView(View):
 
 class TaskDoneView(View):
     def get(self, request, *args, **kwargs):
-        Task.objects.update(
-            pk=kwargs['task_uuid'],
-            state=True
-        )
+        done_task = get_object_or_404(Task, pk=kwargs['task_uuid'])
+        done_task.state = True
+        done_task.save()
         return redirect(request.META.get('HTTP_REFERER'))
 
 
@@ -131,8 +130,7 @@ class ProjectUpdateView(TaskListLoginMixin):
 
     @staticmethod
     def _update_proj_from_form(form, proj_uuid):
-        Project.objects.update(
-            pk=proj_uuid,
-            name=form.cleaned_data['name'],
-            color=form.cleaned_data['color']
-        )
+        update_proj = get_object_or_404(Project, pk=proj_uuid)
+        update_proj.name = form.cleaned_data['name']
+        update_proj.color = form.cleaned_data['color']
+        update_proj.save()

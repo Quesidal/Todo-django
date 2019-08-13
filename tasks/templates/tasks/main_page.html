@@ -47,7 +47,7 @@
                    value="{{ task.end_time|date:'Y-m-d\Th:m:s' }}" id="end-time"/>
         </div>
         <div class="buttons">
-            <input type="submit" class="add" value="add"/>
+            <input type="submit" class="add" value="submit"/>
             <a class="cancel" id='cancel edit' href="{{ request.META.HTTP_REFERER }}">Cancel</a>
             <select name="priority" id="">
                 {#Todo: fix this bad code#}
@@ -168,7 +168,7 @@
             <input name="name" type="text" class="input edit-proj-name" value="{{ project.name }}"/>
         </div>
         <div class="buttons">
-            <input type="submit" class="add" value="add"/>
+            <input type="submit" class="add" value="submit"/>
             <a class="cancel" href="{{ request.META.HTTP_REFERER }}">Cancel</a>
         </div>
     </form>
